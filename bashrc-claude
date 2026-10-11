@@ -1,0 +1,54 @@
+# Claude Code: run a task non-interactively without asking questions
+cauto() {
+  claude -p "$*" \
+    --model sonnet \
+    --effort low \
+    --permission-mode acceptEdits \
+    --add-dir /mnt/lafe-storage \
+    --append-system-prompt "Na nic se neptej. Co není zadané, rozhodni sám a úkol rovnou proveď."
+}
+
+# Claude Code: quick read-only question, changes nothing
+cask() {
+  claude -p "$*" \
+    --model haiku \
+    --effort low \
+    --permission-mode plan
+}
+
+# Claude Code: explain an error from piped output, e.g. docker logs x 2>&1 | cwhy
+cwhy() {
+  claude -p "Najdi příčinu chyby v tomto výstupu a navrhni opravu. $*" \
+    --model sonnet \
+    --effort low
+}
+
+# Claude Code: continue the last task in this directory
+ccont() {
+  claude -c -p "$*" \
+    --model sonnet \
+    --effort low \
+    --permission-mode acceptEdits \
+    --add-dir /mnt/lafe-storage
+}
+
+# Claude Code: like cauto, but may also run docker
+cdock() {
+  claude -p "$*" \
+    --model sonnet \
+    --effort low \
+    --permission-mode acceptEdits \
+    --add-dir /mnt/lafe-storage \
+    --allowedTools "Bash(docker compose *)" "Bash(docker ps *)" "Bash(docker logs *)" \
+    --append-system-prompt "Na nic se neptej. Co není zadané, rozhodni sám a úkol rovnou proveď."
+}
+
+# Claude Code: like cauto, but with a stronger model for harder tasks
+cbig() {
+  claude -p "$*" \
+    --model opus \
+    --effort high \
+    --permission-mode acceptEdits \
+    --add-dir /mnt/lafe-storage \
+    --append-system-prompt "Na nic se neptej. Co není zadané, rozhodni sám a úkol rovnou proveď."
+}
